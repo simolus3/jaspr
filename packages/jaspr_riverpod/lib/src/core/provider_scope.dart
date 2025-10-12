@@ -79,6 +79,7 @@ final class ProviderScope extends StatefulComponent {
     this.overrides = const [],
     this.observers,
     this.retry,
+    this.customRoot,
     required this.child,
   });
 
@@ -132,6 +133,18 @@ final class ProviderScope extends StatefulComponent {
   final List<Override> overrides;
 
   final List<ProviderSync> sync;
+
+  /// A custom [ProviderContainer] acting as a parent for this [ProviderScope]
+  /// if no other [ProviderScope] component is available in the tree.
+  ///
+  /// This can be null, in which case this [ProviderScope] creates a root
+  /// container.
+  ///
+  /// Setting this mostly makes sense when independent jaspr component trees
+  /// need to share state. That is rarely the case, but can be useful for e.g.
+  /// `@client` components in a `mode: static` setup to share state between
+  /// multiple independent components mounting a different subtree.
+  final ProviderContainer? customRoot;
 
   @override
   ProviderScopeState createState() => ProviderScopeState();
@@ -206,7 +219,7 @@ final class ProviderScopeState extends State<ProviderScope> with SyncScopeMixin 
         context.getElementForInheritedComponentOfExactType<UncontrolledProviderScope>()?.component
             as UncontrolledProviderScope?;
 
-    return scope?.container;
+    return scope?.container ?? component.customRoot;
   }
 
   @override

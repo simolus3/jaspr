@@ -1,6 +1,7 @@
 ## Unreleased patch
 
 - Fix compilation errors with `riverpod` versions `^3.0.2`.
+- Add `customRoot` parameter to `ProviderScope` to allow sharing a common `ProviderContainer` between scopes.
 
 ## 0.4.0
 
